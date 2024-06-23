@@ -1,14 +1,15 @@
 import json
-import os
 from datetime import datetime
 
 # Função para criar um novo evento
 def criar_evento():
-    eventos = []
+    eventos = carregar_dados("eventos.json")
 
     while True:
         nome_evento = input("\nNome do Evento: ")
         descricao_evento = input("Descrição do Evento: ")
+        complexidade_evento = input("Complexidade do Evento (Baixa/Média/Alta): ").capitalize()
+        status_evento = input("Status do Evento (Concluído/Em Andamento/Pendente): ").capitalize()
 
         # Captura automática da data e hora atual
         data_evento = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -18,6 +19,8 @@ def criar_evento():
         evento = {
             "Nome do Evento": nome_evento,
             "Descrição do Evento": descricao_evento,
+            "Complexidade": complexidade_evento,
+            "Status da Atividade": status_evento,
             "Data do Evento": data_evento,
             "Horário de Início": horario_inicio,
             "Horário de Fim": horario_fim
@@ -29,12 +32,12 @@ def criar_evento():
         if mais_eventos != 'S':
             break
 
-    salvar_eventos(eventos, "eventos.json")
+    salvar_dados(eventos, "eventos.json")
     print("\nEventos salvos com sucesso!")
 
 # Função para criar uma nova task
 def criar_task():
-    tasks = []
+    tasks = carregar_dados("tasks.json")
 
     while True:
         nome_task = input("\nNome da Task: ")
@@ -63,12 +66,12 @@ def criar_task():
         if mais_tasks != 'S':
             break
 
-    salvar_tasks(tasks, "tasks.json")
+    salvar_dados(tasks, "tasks.json")
     print("\nTasks salvas com sucesso!")
 
 # Função para criar um novo incidente
 def criar_incidente():
-    incidentes = []
+    incidentes = carregar_dados("incidentes.json")
 
     while True:
         tipo_incidente = input("\nTipo de Incidente: ")
@@ -97,23 +100,23 @@ def criar_incidente():
         if mais_incidentes != 'S':
             break
 
-    salvar_incidentes(incidentes, "incidentes.json")
+    salvar_dados(incidentes, "incidentes.json")
     print("\nIncidentes salvos com sucesso!")
 
-# Função para salvar eventos em um arquivo JSON
-def salvar_eventos(eventos, nome_arquivo):
-    with open(nome_arquivo, 'w') as file:
-        json.dump(eventos, file, indent=4)
+# Função para carregar dados de um arquivo JSON
+def carregar_dados(nome_arquivo):
+    try:
+        with open(nome_arquivo, 'r') as file:
+            dados = json.load(file)
+    except FileNotFoundError:
+        dados = []
+    
+    return dados
 
-# Função para salvar tasks em um arquivo JSON
-def salvar_tasks(tasks, nome_arquivo):
+# Função para salvar dados em um arquivo JSON
+def salvar_dados(dados, nome_arquivo):
     with open(nome_arquivo, 'w') as file:
-        json.dump(tasks, file, indent=4)
-
-# Função para salvar incidentes em um arquivo JSON
-def salvar_incidentes(incidentes, nome_arquivo):
-    with open(nome_arquivo, 'w') as file:
-        json.dump(incidentes, file, indent=4)
+        json.dump(dados, file, indent=4)
 
 # Função principal para exibir o menu
 def menu_principal():
